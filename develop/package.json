@@ -1,0 +1,25 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "Packages for use in this project",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aaronealdama/Template-Engine"
+  },
+  "keywords": [
+    "npm",
+    "install"
+  ],
+  "author": "Aaron Ealdama",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "inquirer": "^7.0.6"
+  }
+}
