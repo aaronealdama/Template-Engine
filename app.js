@@ -1,7 +1,6 @@
 // global variables
 let emptyArr = [];
 
-
 // packages
 const fs = require("fs");
 const inquirer = require("inquirer");
@@ -18,10 +17,10 @@ const loopNum = () => {
     name: "loop",
     message: "How many members do you want to add?"
   });
+  // returns obj with number we will use in the for loop
 };
 
 const prompt = () => {
- 
   return inquirer.prompt([
     {
       type: "input",
@@ -44,7 +43,7 @@ const prompt = () => {
       message: "What is their job title?",
       choices: ["Manager", "Engineer", "Intern"]
     }
-  ]);
+  ]); // prompt returns an object used as parameters for class generation
 };
 
 const special = obj => {
@@ -72,10 +71,11 @@ const special = obj => {
         message: "What school are they going to?"
       })
       
-  }
+  } // returns another obj containing the special property
 };
 
 const html = (obj, loop) => {
+  // function uses string concatenation to concatenate template literals together
   let emptyStr = ``;
   emptyStr += `<!DOCTYPE html>
 <html lang="en">
@@ -93,10 +93,19 @@ const html = (obj, loop) => {
     />
   </head>
   <body>
+  <nav>
+    <div class="nav-wrapper">
+      <div class = "header center">
+      <h2>Team Portfolio</h2>
+      </div>
+    </div>
+  </nav>
+  <br><br>
     <div class="container">
       <div class="row">
     `;
   for (let i = 0; i < loop.loop; i++) {
+    // for loop checks for obj title and adds html to emptyStr
     if (obj[i].title === "Manager") {
       emptyStr += `<div class="col s12 m4">
   <div class="card red lighten-1">
@@ -118,7 +127,6 @@ const html = (obj, loop) => {
         </div>
       </div>
     </div>
-    <div class="card-action"></div>
   </div>
 </div>`;
     } else if (obj[i].title === "Engineer") {
@@ -142,11 +150,12 @@ const html = (obj, loop) => {
         </div>
       </div>
     </div>
-    <div class="card-action"></div>
   </div>
 </div>`;
     } else if (obj[i].title === "Intern") {
-      emptyStr += ` <div class="card-content white-text">
+      emptyStr += `<div class="col s12 m4">
+      <div class="card red lighten-1">
+      <div class="card-content white-text">
       <span class="card-title">${obj[i].name}</span>
       <br>
       <i class="medium material-icons">child_care</i>
@@ -164,9 +173,9 @@ const html = (obj, loop) => {
         </div>
       </div>
     </div>
-    <div class="card-action"></div>
-  </div>
-</div>`;
+    </div>
+    </div>
+    `;
     }
   }
   emptyStr += `
@@ -175,18 +184,26 @@ const html = (obj, loop) => {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
 </html>`;
-  return emptyStr;
-};
+  return emptyStr; // emptyStr is then returned as a single template literal
+}; 
 
 async function initiation() {
-  const numObj = await loopNum();
+  const numObj = await loopNum(); // numObj contains the value user inputs in loopNum prompt
+
   for (let i = 1; i <= numObj.loop; i++) {
-    console.log(`This is member ${i}`);
+    // for loop loops until numObj.loop value is reached
+    console.log(`This is member ${i}`); 
+    // alerts user the member number
     const userObj = await prompt(numObj);
+    // userObj is an obj of user input values
     const specialObj = await special(userObj);
+    // specialObj is an obj taking userObj and prompting user a specific question
+    // depending on the title
     if (userObj.title === "Manager") {
       const manager = new Manager(userObj.name, userObj.id, userObj.email, specialObj.officeNum);
+      // new class generated
       emptyArr.push(manager);
+      // class object is pushed into an array
     } else if (userObj.title === "Engineer") {
       const engineer = new Engineer(userObj.name, userObj.id, userObj.email, specialObj.github);
       emptyArr.push(engineer);
@@ -195,13 +212,16 @@ async function initiation() {
       emptyArr.push(intern);
     }
   }
+
   const htmlContent = await html(emptyArr, numObj);
+  // returns string with all the html content generated from the content within the emptyArr
+
   fs.writeFile("team.html", htmlContent, err => {
     if (err) {
       throw err;
     }
-  });
-  console.log(emptyArr);
+    console.log("Team HTML is successfully generated!")
+  }); // team.html is generated with the string from html content
 }
 
-initiation();
+initiation(); // initiation function is invoked
