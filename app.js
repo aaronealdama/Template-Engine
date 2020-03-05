@@ -15,7 +15,20 @@ const loopNum = () => {
   return inquirer.prompt({
     type: "input",
     name: "loop",
-    message: "How many members do you want to add?"
+    message: "How many members do you want to add?",
+    // greater: function(num) {
+    //   const number = parseInt(num);
+    //   if (number === 0) {
+    //     return "Must be number greater than 0"
+    //   }
+    //   return true;
+    // },
+    validate: function(num) {
+      if ((/[1-9]/).test(num) === false) {
+        return "Must be a number"
+      } 
+      return true;
+    }
   });
   // returns obj with number we will use in the for loop
 };
@@ -25,17 +38,35 @@ const prompt = () => {
     {
       type: "input",
       name: "name",
-      message: "What is their name?"
+      message: "What is their name?",
+      validate: function(input) {
+        if ((/[1-9]/).test(input) === true) {
+          return "Cannot include numbers in name"
+        }
+        return true;
+      }
     },
     {
       type: "input",
       name: "id",
-      message: "What is their id number?"
+      message: "What is their id number?",
+      validate: function(input) {
+        if ((/[a-zA-z]/).test(input) === true) {
+          return "Cannot include letters in id"
+        }
+        return true;
+      }
     },
     {
       type: "input",
       name: "email",
-      message: "What is their email?"
+      message: "What is their email?",
+      validate: function(input) {
+        if ((/[@]/).test(input) === false) {
+          return "Must include an email"
+        }
+        return true;
+      }
     },
     {
       type: "list",
@@ -52,7 +83,13 @@ const special = obj => {
       .prompt({
         type: "input",
         name: "officeNum",
-        message: "What is their office number?"
+        message: "What is their office number?",
+        validate: function(input) {
+          if ((/[a-zA-z]/).test(input) === true) {
+            return "Cannot include letters in office number"
+          }
+          return true;
+        }
       })
       
   } else if (obj.title === "Engineer") {
@@ -60,7 +97,13 @@ const special = obj => {
       .prompt({
         type: "input",
         name: "github",
-        message: "What is their github username?"
+        message: "What is their github username?",
+        validate: function(input) {
+          if ((/[1-9]/).test(input) === true) {
+            return "Cannot include numbers in name"
+          }
+          return true;
+        }
       })
       
   } else if (obj.title === "Intern") {
@@ -68,7 +111,13 @@ const special = obj => {
       .prompt({
         type: "input",
         name: "school",
-        message: "What school are they going to?"
+        message: "What school are they going to?",
+        validate: function(input) {
+          if ((/[1-9]/).test(input) === true) {
+            return "Cannot include numbers in school name"
+          }
+          return true;
+        }
       })
       
   } // returns another obj containing the special property
