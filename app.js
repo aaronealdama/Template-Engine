@@ -237,6 +237,7 @@ const html = (obj, loop) => {
 }; 
 
 async function initiation() {
+  emptyArr = [];
   const numObj = await loopNum(); // numObj contains the value user inputs in loopNum prompt
 
   for (let i = 1; i <= numObj.loop; i++) {
