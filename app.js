@@ -1,6 +1,6 @@
 // global variables
 let emptyArr = [];
-let newArr = [];
+
 
 // packages
 const fs = require("fs");
@@ -21,6 +21,7 @@ const loopNum = () => {
 };
 
 const prompt = () => {
+ 
   return inquirer.prompt([
     {
       type: "input",
@@ -54,9 +55,7 @@ const special = obj => {
         name: "officeNum",
         message: "What is their office number?"
       })
-      .then(function(response) {
-        newArr.push(response);
-      });
+      
   } else if (obj.title === "Engineer") {
     return inquirer
       .prompt({
@@ -64,9 +63,7 @@ const special = obj => {
         name: "github",
         message: "What is their github username?"
       })
-      .then(function(response) {
-        newArr.push(response);
-      });
+      
   } else if (obj.title === "Intern") {
     return inquirer
       .prompt({
@@ -74,9 +71,7 @@ const special = obj => {
         name: "school",
         message: "What school are they going to?"
       })
-      .then(function(response) {
-        newArr.push(response);
-      });
+      
   }
 };
 
@@ -102,70 +97,70 @@ const html = (obj, loop) => {
       <div class="row">
     `;
   for (let i = 0; i < loop.loop; i++) {
-    if (obj[i][0].title === "Manager") {
+    if (obj[i].title === "Manager") {
       emptyStr += `<div class="col s12 m4">
   <div class="card red lighten-1">
     <div class="card-content white-text">
-      <span class="card-title">${obj[i][0].name}</span>
+      <span class="card-title">${obj[i].name}</span>
       <br>
       <i class="medium material-icons">cloud_circle</i>
       <br>
-      <span class="card-title">${obj[i][0].title}</span>
+      <span class="card-title">${obj[i].title}</span>
       <div class="information">
         <div class="info">
-          <p>ID: ${obj[i][0].id}</p>
+          <p>ID: ${obj[i].id}</p>
         </div>
         <div class="info">
-          <p>Email: ${obj[i][0].email}</p>
+          <p>Email: ${obj[i].email}</p>
         </div>
         <div class="info">
-          <p>Office Number: ${obj[i][1].officeNum}</p>
+          <p>Office Number: ${obj[i].officeNum}</p>
         </div>
       </div>
     </div>
     <div class="card-action"></div>
   </div>
 </div>`;
-    } else if (obj[i][0].title === "Engineer") {
+    } else if (obj[i].title === "Engineer") {
       emptyStr += `<div class="col s12 m4">
   <div class="card red lighten-1">
     <div class="card-content white-text">
-      <span class="card-title">${obj[i][0].name}</span>
+      <span class="card-title">${obj[i].name}</span>
       <br>
       <i class="medium material-icons">desktop_windows</i>
       <br>
-      <span class="card-title">${obj[i][0].title}</span>
+      <span class="card-title">${obj[i].title}</span>
       <div class="information">
         <div class="info">
-          <p>ID: ${obj[i][0].id}</p>
+          <p>ID: ${obj[i].id}</p>
         </div>
         <div class="info">
-          <p>Email: ${obj[i][0].email}</p>
+          <p>Email: ${obj[i].email}</p>
         </div>
         <div class="info">
-          <p>Github: ${obj[i][1].github}</p>
+          <p>Github: ${obj[i].github}</p>
         </div>
       </div>
     </div>
     <div class="card-action"></div>
   </div>
 </div>`;
-    } else if (obj[i][0].title === "Intern") {
+    } else if (obj[i].title === "Intern") {
       emptyStr += ` <div class="card-content white-text">
-      <span class="card-title">${obj[i][0].name}</span>
+      <span class="card-title">${obj[i].name}</span>
       <br>
       <i class="medium material-icons">child_care</i>
       <br>
-      <span class="card-title"> ${obj[i][0].title}</span>
+      <span class="card-title"> ${obj[i].title}</span>
       <div class="information">
         <div class="info">
-          <p>ID: ${obj[i][0].id}</p>
+          <p>ID: ${obj[i].id}</p>
         </div>
         <div class="info">
-          <p>Email: ${obj[i][0].email}</p>
+          <p>Email: ${obj[i].email}</p>
         </div>
         <div class="info">
-          <p>School: ${obj[i][1].school}</p>
+          <p>School: ${obj[i].school}</p>
         </div>
       </div>
     </div>
@@ -185,12 +180,20 @@ const html = (obj, loop) => {
 
 async function initiation() {
   const numObj = await loopNum();
-  for (let i = 0; i < numObj.loop; i++) {
-    newArr = [];
-    const userObj = await prompt();
-    newArr.push(userObj);
-    await special(userObj);
-    emptyArr.push(newArr);
+  for (let i = 1; i <= numObj.loop; i++) {
+    console.log(`This is member ${i}`);
+    const userObj = await prompt(numObj);
+    const specialObj = await special(userObj);
+    if (userObj.title === "Manager") {
+      const manager = new Manager(userObj.name, userObj.id, userObj.email, specialObj.officeNum);
+      emptyArr.push(manager);
+    } else if (userObj.title === "Engineer") {
+      const engineer = new Engineer(userObj.name, userObj.id, userObj.email, specialObj.github);
+      emptyArr.push(engineer);
+    } else if (userObj.title === "Intern") {
+      const intern = new Intern(userObj.name, userObj.id, userObj.email, specialObj.school);
+      emptyArr.push(intern);
+    }
   }
   const htmlContent = await html(emptyArr, numObj);
   fs.writeFile("team.html", htmlContent, err => {
